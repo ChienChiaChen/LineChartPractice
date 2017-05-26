@@ -1,7 +1,10 @@
 package chiachen.example.com.chartpractice;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -38,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 	private boolean hasLabelForSelected = false;
 	private boolean pointsHaveDifferentColor;
 	// private boolean hasGradientToTransparent = false;
-	
+	private Handler mHandler = new Handler();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,6 +53,28 @@ public class MainActivity extends AppCompatActivity {
 		generateValues();
 		generateData();
 		resetViewport();
+		
+		findViewById(R.id.btn_one_day).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mHandler.sendEmptyMessage(1);
+			}
+		});
+		findViewById(R.id.btn_one_month).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mHandler.removeCallbacksAndMessages(null);
+			}
+		});
+		
+		mHandler = new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				prepareDataAnimation();
+				chart.startDataAnimation();
+				mHandler.sendMessageDelayed(mHandler.obtainMessage(),300);
+			}
+		};
 	}
 	
 	private void resetViewport() {
@@ -60,7 +85,9 @@ public class MainActivity extends AppCompatActivity {
 		v.left = 0;
 		v.right = numberOfPoints - 1;//x axis end
 		chart.setMaximumViewport(v);
-		chart.setCurrentViewport(v);
+		// chart.setCurrentViewport(v);
+		chart.setCurrentViewportWithAnimation(v);
+		chart.setValueSelectionEnabled(true);
 	}
 	private void generateValues() {
 		for (int i = 0; i < maxNumberOfLines; ++i) {
@@ -83,10 +110,10 @@ public class MainActivity extends AppCompatActivity {
 			Line line = new Line(values);
 			line.setColor(ChartUtils.COLORS[i]);
 			line.setShape(shape);
-			line.setCubic(isCubic);
-			line.setFilled(isFilled);
+			line.setCubic(isCubic=true);//curve line
+			line.setFilled(isFilled=true);// area
 			line.setHasLabels(hasLabels);
-			line.setHasLabelsOnlyForSelected(hasLabelForSelected);
+			line.setHasLabelsOnlyForSelected(hasLabelForSelected=true);
 			line.setHasLines(hasLines);
 			line.setHasPoints(hasPoints);
 			// line.setHasGradientToTransparent(hasGradientToTransparent);
@@ -130,5 +157,14 @@ public class MainActivity extends AppCompatActivity {
 			
 		}
 		
+	}
+	
+	private void prepareDataAnimation() {
+		for (Line line : data.getLines()) {
+			for (PointValue value : line.getValues()) {
+				// Here I modify target only for Y values but it is OK to modify X targets as well.
+				value.setTarget(value.getX(), (float) Math.random() * 100);
+			}
+		}
 	}
 }
