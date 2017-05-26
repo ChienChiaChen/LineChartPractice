@@ -2,11 +2,13 @@ package chiachen.example.com.chartpractice;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import lecho.lib.hellocharts.gesture.ZoomType;
+import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
@@ -42,11 +44,10 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		chart = (LineChartView) findViewById(R.id.chart);
-		// chart.setOnValueTouchListener(new ValueTouchListener());
+		chart.setOnValueTouchListener(new ValueTouchListener());
 		chart.setViewportCalculationEnabled(false);
 		// Generate some random values.
 		generateValues();
-		
 		generateData();
 		resetViewport();
 	}
@@ -55,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
 		// Reset viewport height range to (0,100)
 		final Viewport v = new Viewport(chart.getMaximumViewport());
 		v.bottom = 0;
-		v.top = 100;
+		v.top = 100;//y axis end
 		v.left = 0;
-		v.right = numberOfPoints - 1;
+		v.right = numberOfPoints - 1;//x axis end
 		chart.setMaximumViewport(v);
 		chart.setCurrentViewport(v);
 	}
@@ -71,10 +72,10 @@ public class MainActivity extends AppCompatActivity {
 	
 	private void generateData() {
 		
-		List<Line> lines = new ArrayList<Line>();
+		List<Line> lines = new ArrayList<>();
 		for (int i = 0; i < numberOfLines; ++i) {
 			
-			List<PointValue> values = new ArrayList<PointValue>();
+			List<PointValue> values = new ArrayList<>();
 			for (int j = 0; j < numberOfPoints; ++j) {
 				values.add(new PointValue(j, randomNumbersTab[i][j]));
 			}
@@ -113,6 +114,21 @@ public class MainActivity extends AppCompatActivity {
 		
 		data.setBaseValue(Float.NEGATIVE_INFINITY);
 		chart.setLineChartData(data);
+		
+	}
+	
+	private class ValueTouchListener implements LineChartOnValueSelectListener {
+		
+		@Override
+		public void onValueSelected(int lineIndex, int pointIndex, PointValue value) {
+			Toast.makeText(MainActivity.this, "Selected: " + value, Toast.LENGTH_SHORT).show();
+		}
+		
+		@Override
+		public void onValueDeselected() {
+			// TODO Auto-generated method stub
+			
+		}
 		
 	}
 }
