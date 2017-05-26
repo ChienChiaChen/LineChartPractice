@@ -13,6 +13,7 @@ import java.util.List;
 import lecho.lib.hellocharts.gesture.ZoomType;
 import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
@@ -79,15 +80,11 @@ public class MainActivity extends AppCompatActivity {
 	
 	private void resetViewport() {
 		// Reset viewport height range to (0,100)
-		final Viewport v = new Viewport(chart.getMaximumViewport());
-		v.bottom = 0;
-		v.top = 100;//y axis end
-		v.left = 0;
-		v.right = numberOfPoints - 1;//x axis end
+		final Viewport v = new Viewport(0, upper_bound, 6, 0);
 		chart.setMaximumViewport(v);
 		// chart.setCurrentViewport(v);
 		chart.setCurrentViewportWithAnimation(v);
-		chart.setValueSelectionEnabled(true);
+		// chart.setValueSelectionEnabled(true);
 	}
 	private void generateValues() {
 		for (int i = 0; i < maxNumberOfLines; ++i) {
@@ -98,52 +95,91 @@ public class MainActivity extends AppCompatActivity {
 	}
 	
 	private void generateData() {
+		// int numValues = 7;
+		//
+		// List<AxisValue> axisValues = new ArrayList<AxisValue>();
+		// List<PointValue> values1 = new ArrayList<PointValue>();
+		// for (int i = 0; i < numValues; ++i) {
+		// 	values1.add(new PointValue(i, 0));
+		// 	axisValues.add(new AxisValue(i).setLabel(days[i]));
+		// }
+		//
+		//
+		// List<Line> lines = new ArrayList<>();
+		// for (int i = 0; i < numberOfLines; ++i) {
+		//
+		// 	List<PointValue> values = new ArrayList<>();
+		// 	for (int j = 0; j < numberOfPoints; ++j) {
+		// 		values.add(new PointValue(j, randomNumbersTab[i][j]));
+		// 	}
+		//
+		// 	Line line = new Line(values);
+		// 	line.setColor(ChartUtils.COLORS[i]);
+		// 	line.setShape(shape);
+		// 	line.setCubic(isCubic=true);//curve line
+		// 	line.setFilled(isFilled=true);// area
+		// 	line.setHasLabels(hasLabels);
+		// 	line.setHasLabelsOnlyForSelected(hasLabelForSelected=true);
+		// 	line.setHasLines(hasLines);
+		// 	line.setHasPoints(hasPoints);
+		// 	// line.setHasGradientToTransparent(hasGradientToTransparent);
+		// 	if (pointsHaveDifferentColor=true){
+		// 		line.setPointColor(ChartUtils.COLORS[1]);
+		// 	}
+		// 	lines.add(line);
+		// }
+		//
+		// data = new LineChartData(lines);
 		
-		List<Line> lines = new ArrayList<>();
-		for (int i = 0; i < numberOfLines; ++i) {
-			
-			List<PointValue> values = new ArrayList<>();
-			for (int j = 0; j < numberOfPoints; ++j) {
-				values.add(new PointValue(j, randomNumbersTab[i][j]));
-			}
-			
-			Line line = new Line(values);
-			line.setColor(ChartUtils.COLORS[i]);
-			line.setShape(shape);
-			line.setCubic(isCubic=true);//curve line
-			line.setFilled(isFilled=true);// area
-			line.setHasLabels(hasLabels);
-			line.setHasLabelsOnlyForSelected(hasLabelForSelected=true);
-			line.setHasLines(hasLines);
-			line.setHasPoints(hasPoints);
-			// line.setHasGradientToTransparent(hasGradientToTransparent);
-			if (pointsHaveDifferentColor){
-				line.setPointColor(ChartUtils.COLORS[(i + 1) % ChartUtils.COLORS.length]);
-			}
-			lines.add(line);
+		// if (hasAxes) {
+		// 	Axis axisX = new Axis();
+		// 	Axis axisY = new Axis().setHasLines(true);
+		// 	if (hasAxesNames) {
+		// 		axisX.setName("Axis X");
+		// 		axisY.setName("Axis Y");
+		// 	}
+		// 	data.setAxisXBottom(axisX);
+		// 	data.setAxisYLeft(axisY);
+		// } else {
+		// 	data.setAxisXBottom(null);
+		// 	data.setAxisYLeft(null);
+		// }
+		
+		// data.setBaseValue(Float.NEGATIVE_INFINITY);
+		
+		int numValues = 7;
+		List<AxisValue> axisValues = new ArrayList< >();
+		List<PointValue> values = new ArrayList< >();
+		for (int i = 0; i < numValues; ++i) {
+			values.add(new PointValue(i, upper_bound/2));
+			axisValues.add(new AxisValue(i).setLabel(days[i]));
 		}
+		
+		Line line = new Line(values);
+		// line.setColor(ChartUtils.COLOR_GREEN).setCubic(true);
+		line.setColor(ChartUtils.COLOR_VIOLET);
+		line.setShape(shape);
+		line.setCubic(isCubic=true);//curve line
+		line.setFilled(isFilled=true);// area
+		line.setHasLabels(hasLabels);
+		line.setHasLabelsOnlyForSelected(hasLabelForSelected=true);
+		line.setHasLines(hasLines);
+		line.setHasPoints(hasPoints);
+		
+		List<Line> lines = new ArrayList<Line>();
+		lines.add(line);
 		
 		data = new LineChartData(lines);
+		data.setAxisXBottom(new Axis(axisValues).setHasLines(true));
+		data.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(3));
 		
-		if (hasAxes) {
-			Axis axisX = new Axis();
-			Axis axisY = new Axis().setHasLines(true);
-			if (hasAxesNames) {
-				axisX.setName("Axis X");
-				axisY.setName("Axis Y");
-			}
-			data.setAxisXBottom(axisX);
-			data.setAxisYLeft(axisY);
-		} else {
-			data.setAxisXBottom(null);
-			data.setAxisYLeft(null);
-		}
-		
-		data.setBaseValue(Float.NEGATIVE_INFINITY);
 		chart.setLineChartData(data);
 		
 	}
 	
+	int upper_bound =100;
+	
+	public final static String[] days = new String[]{"Mon", "Tue", "Wen", "Thu", "Fri", "Sat", "Sun",};
 	private class ValueTouchListener implements LineChartOnValueSelectListener {
 		
 		@Override
@@ -163,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
 		for (Line line : data.getLines()) {
 			for (PointValue value : line.getValues()) {
 				// Here I modify target only for Y values but it is OK to modify X targets as well.
-				value.setTarget(value.getX(), (float) Math.random() * 100);
+				value.setTarget(value.getX(), (float) Math.random() * 80);
 			}
 		}
 	}
