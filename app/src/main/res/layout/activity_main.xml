@@ -6,7 +6,7 @@
 	android:layout_height="match_parent"
 	tools:context="chiachen.example.com.chartpractice.MainActivity">
 
-	<lecho.lib.hellocharts.view.LineChartView
+	<chiachen.example.com.chartpractice.LineUtil.view.LineChartView
 		android:id="@+id/chart"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
