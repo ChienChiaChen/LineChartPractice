@@ -10,6 +10,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import chiachen.example.com.chartpractice.LineUtil.gestire.ZoomType;
 import chiachen.example.com.chartpractice.LineUtil.listener.LineChartOnValueSelectListener;
 import chiachen.example.com.chartpractice.LineUtil.model.Axis;
 import chiachen.example.com.chartpractice.LineUtil.model.AxisValue;
@@ -76,13 +77,17 @@ public class MainActivity extends AppCompatActivity {
 			}
 		};
 	}
-	
+
+	private int widthEnd = 2;
+	private int widthStart = 2;
 	private void resetViewport() {
 		// Reset viewport height range to (0,100)
 		final Viewport v = new Viewport(0, upper_bound, 6, 0);
 		chart.setMaximumViewport(v);
 		// chart.setCurrentViewport(v);
-		chart.setCurrentViewportWithAnimation(v);
+		final Viewport v1 = new Viewport(widthStart, upper_bound, widthEnd, 0);
+		chart.setCurrentViewportWithAnimation(v1);
+
 		// chart.setValueSelectionEnabled(true);
 	}
 	private void generateValues() {
@@ -158,14 +163,14 @@ public class MainActivity extends AppCompatActivity {
 		// line.setColor(ChartUtils.COLOR_GREEN).setCubic(true);
 		line.setColor(ChartUtils.COLOR_VIOLET);
 		line.setShape(shape);
-		line.setCubic(isCubic=true);//curve line
+		// line.setCubic(isCubic=true);//curve line
 		line.setFilled(isFilled=true);// area
 		line.setHasLabels(hasLabels);
 		line.setHasLabelsOnlyForSelected(hasLabelForSelected=true);
 		line.setHasLines(hasLines);
 		line.setHasPoints(hasPoints);
 		
-		List<Line> lines = new ArrayList<Line>();
+		List<Line> lines = new ArrayList<>();
 		lines.add(line);
 		
 		data = new LineChartData(lines);
@@ -173,7 +178,8 @@ public class MainActivity extends AppCompatActivity {
 		data.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(3));
 		
 		chart.setLineChartData(data);
-		
+		chart.setZoomType(ZoomType.HORIZONTAL);
+
 	}
 	
 	int upper_bound =100;
