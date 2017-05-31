@@ -555,7 +555,7 @@ public class AxesRenderer {
 
         if (axis.hasLines()) {
             int valueToDrawIndex = 0;
-            for (; valueToDrawIndex < valuesToDrawNumTab[position]; ++valueToDrawIndex) {
+            for (; valueToDrawIndex < 1; ++valueToDrawIndex) {
                 if (isAxisVertical) {
                     lineY1 = lineY2 = rawValuesTab[position][valueToDrawIndex];
                 } else {
