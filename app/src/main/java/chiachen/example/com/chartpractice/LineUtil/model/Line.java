@@ -26,6 +26,7 @@ public class Line {
     private int areaTransparency = DEFAULT_AREA_TRANSPARENCY;
     private int strokeWidth = DEFAULT_LINE_STROKE_WIDTH_DP;
     private int pointRadius = DEFAULT_POINT_RADIUS_DP;
+    private int selectedColor;
     private boolean hasGradientToTransparent = false;
     private boolean hasPoints = true;
     private boolean hasLines = true;
@@ -127,6 +128,15 @@ public class Line {
 
     public int getDarkenColor() {
         return darkenColor;
+    }
+    
+    
+    public void setSelectedColor(int selectedColor) {
+        this.selectedColor = selectedColor;
+    }
+    
+    public int getSelectedColor(){
+        return selectedColor;
     }
 
     /**
