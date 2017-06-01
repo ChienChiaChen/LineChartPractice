@@ -75,6 +75,8 @@ public class Axis {
 
     private boolean hasTiltedLabels = false;
 
+    private int selectedColor;
+
     /**
      * Creates auto-generated axis without name and with default formatter.
      */
@@ -302,4 +304,12 @@ public class Axis {
         return this;
     }
 
+    public int getSelectedColor() {
+        return selectedColor;
+    }
+    
+    public Axis setSelectedColor(int selectedColor) {
+        this.selectedColor = selectedColor;
+        return this;
+    }
 }
