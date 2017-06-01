@@ -423,7 +423,7 @@ public class LineChartRenderer extends AbstractChartRenderer {
                                 int valueIndex) {
         if (selectedValue.getFirstIndex() == lineIndex && selectedValue.getSecondIndex() == valueIndex) {
             int pointRadius = ChartUtils.dp2px(density, line.getPointRadius());
-            pointPaint.setColor(ChartUtils.COLOR_BLUE);
+            pointPaint.setColor(line.getSelectedColor());
             drawPoint(canvas, line, pointValue, rawX, rawY, pointRadius + touchToleranceMargin);
             if (line.hasLabels() || line.hasLabelsOnlyForSelected()) {
                 drawLabel(canvas, line, pointValue, rawX, rawY, pointRadius + labelOffset);
