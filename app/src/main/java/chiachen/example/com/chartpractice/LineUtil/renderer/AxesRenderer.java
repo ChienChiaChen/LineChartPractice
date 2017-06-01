@@ -42,6 +42,8 @@ public class AxesRenderer {
             '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
             '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};
 
+    private boolean flag = false;
+    private int selectedPosition;
     private Chart chart;
     private ChartComputator computator;
     private int axisMargin;
@@ -550,12 +552,14 @@ public class AxesRenderer {
         }
         // Draw separation line with the same color as axis labels and name.
         if (axis.hasSeparationLine()) {
-            canvas.drawLine(separationX1, separationY1, separationX2, separationY2, labelPaintTab[position]);
+            Paint paint=new Paint(labelPaintTab[position]);
+            paint.setColor(ChartUtils.COLOR_GREEN);
+            canvas.drawLine(separationX1, separationY1, separationX2, separationY2, paint);
         }
 
         if (axis.hasLines()) {
             int valueToDrawIndex = 0;
-            for (; valueToDrawIndex < 1; ++valueToDrawIndex) {
+            for (; valueToDrawIndex < valuesToDrawNumTab[position]; ++valueToDrawIndex) {
                 if (isAxisVertical) {
                     lineY1 = lineY2 = rawValuesTab[position][valueToDrawIndex];
                 } else {
@@ -568,6 +572,11 @@ public class AxesRenderer {
             }
             canvas.drawLines(linesDrawBufferTab[position], 0, valueToDrawIndex * 4, linePaintTab[position]);
         }
+    }
+
+    public void setAxesSelected(int position) {
+        selectedPosition = position;
+        flag = true;
     }
 
     private void drawAxisLabelsAndName(Canvas canvas, Axis axis, int position) {
@@ -605,8 +614,14 @@ public class AxesRenderer {
                         labelPaintTab[position]);
                 canvas.restore();
             } else {
-                canvas.drawText(labelBuffer, labelBuffer.length - charsNumber, charsNumber, labelX, labelY,
-                        labelPaintTab[position]);
+                if (flag && valueToDrawIndex == selectedPosition) {
+                    flag = false;
+                    Paint paint = new Paint(labelPaintTab[position]);
+                    paint.setColor(axis.getSelectedColor());
+                    canvas.drawText(labelBuffer, labelBuffer.length - charsNumber, charsNumber, labelX, labelY, paint);
+                } else {
+                    canvas.drawText(labelBuffer, labelBuffer.length - charsNumber, charsNumber, labelX, labelY, labelPaintTab[position]);
+                }
             }
         }
 
