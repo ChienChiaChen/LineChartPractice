@@ -111,7 +111,8 @@ public abstract class AbstractChartView extends View implements Chart {
             }
 
             if (needInvalidate) {
-                ViewCompat.postInvalidateOnAnimation(this);
+                axesRenderer.setAxesSelected(chartRenderer.getSelectedValue().getSecondIndex());
+                ViewCompat.postInvalidateOnAnimation(this);// Begin onDraw
             }
 
             return true;
