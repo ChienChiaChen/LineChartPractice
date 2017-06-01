@@ -10,7 +10,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import chiachen.example.com.chartpractice.LineUtil.gestire.ZoomType;
 import chiachen.example.com.chartpractice.LineUtil.listener.LineChartOnValueSelectListener;
 import chiachen.example.com.chartpractice.LineUtil.model.Axis;
 import chiachen.example.com.chartpractice.LineUtil.model.AxisValue;
@@ -30,18 +29,16 @@ public class MainActivity extends AppCompatActivity {
 	private int maxNumberOfLines = 4;
 	private int numberOfPoints = 19;
 	float[][] randomNumbersTab = new float[maxNumberOfLines][numberOfPoints];
+	public String[] days = new String[] {
+			"1/1", "1/2", "1/3", "1/4", "1/5", "1/6", "1/7", "1/8", "1/9", "1/10", "1/11"};
 	
-	private boolean hasAxes = true;
-	private boolean hasAxesNames = true;
+
 	private boolean hasLines = true;
 	private boolean hasPoints = true;
 	private ValueShape shape = ValueShape.CIRCLE;
-	private boolean isFilled = false;
+	private boolean isFilled = true;
 	private boolean hasLabels = false;
-	private boolean isCubic = false;
-	private boolean hasLabelForSelected = false;
-	private boolean pointsHaveDifferentColor;
-	// private boolean hasGradientToTransparent = false;
+	private boolean hasLabelForSelected = true;
 	private Handler mHandler = new Handler();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,23 +70,23 @@ public class MainActivity extends AppCompatActivity {
 			public void handleMessage(Message msg) {
 				prepareDataAnimation();
 				chart.startDataAnimation();
-				mHandler.sendMessageDelayed(mHandler.obtainMessage(),300);
 			}
 		};
 	}
 
-	private int widthEnd = 2;
-	private int widthStart = 2;
+	private int widthStart = 0;
+	private int widthEnd = 6;
 	private void resetViewport() {
 		// Reset viewport height range to (0,100)
-		final Viewport v = new Viewport(0, upper_bound, 6, 0);
+		final Viewport v = new Viewport(0, upper_bound, days.length, 0);
 		chart.setMaximumViewport(v);
 		// chart.setCurrentViewport(v);
 		final Viewport v1 = new Viewport(widthStart, upper_bound, widthEnd, 0);
 		chart.setCurrentViewportWithAnimation(v1);
-
-		// chart.setValueSelectionEnabled(true);
+		
+		chart.setValueSelectionEnabled(true);
 	}
+
 	private void generateValues() {
 		for (int i = 0; i < maxNumberOfLines; ++i) {
 			for (int j = 0; j < numberOfPoints; ++j) {
@@ -99,59 +96,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 	
 	private void generateData() {
-		// int numValues = 7;
-		//
-		// List<AxisValue> axisValues = new ArrayList<AxisValue>();
-		// List<PointValue> values1 = new ArrayList<PointValue>();
-		// for (int i = 0; i < numValues; ++i) {
-		// 	values1.add(new PointValue(i, 0));
-		// 	axisValues.add(new AxisValue(i).setLabel(days[i]));
-		// }
-		//
-		//
-		// List<Line> lines = new ArrayList<>();
-		// for (int i = 0; i < numberOfLines; ++i) {
-		//
-		// 	List<PointValue> values = new ArrayList<>();
-		// 	for (int j = 0; j < numberOfPoints; ++j) {
-		// 		values.add(new PointValue(j, randomNumbersTab[i][j]));
-		// 	}
-		//
-		// 	Line line = new Line(values);
-		// 	line.setColor(ChartUtils.COLORS[i]);
-		// 	line.setShape(shape);
-		// 	line.setCubic(isCubic=true);//curve line
-		// 	line.setFilled(isFilled=true);// area
-		// 	line.setHasLabels(hasLabels);
-		// 	line.setHasLabelsOnlyForSelected(hasLabelForSelected=true);
-		// 	line.setHasLines(hasLines);
-		// 	line.setHasPoints(hasPoints);
-		// 	// line.setHasGradientToTransparent(hasGradientToTransparent);
-		// 	if (pointsHaveDifferentColor=true){
-		// 		line.setPointColor(ChartUtils.COLORS[1]);
-		// 	}
-		// 	lines.add(line);
-		// }
-		//
-		// data = new LineChartData(lines);
-		
-		// if (hasAxes) {
-		// 	Axis axisX = new Axis();
-		// 	Axis axisY = new Axis().setHasLines(true);
-		// 	if (hasAxesNames) {
-		// 		axisX.setName("Axis X");
-		// 		axisY.setName("Axis Y");
-		// 	}
-		// 	data.setAxisXBottom(axisX);
-		// 	data.setAxisYLeft(axisY);
-		// } else {
-		// 	data.setAxisXBottom(null);
-		// 	data.setAxisYLeft(null);
-		// }
-		
-		// data.setBaseValue(Float.NEGATIVE_INFINITY);
-		
-		int numValues = 7;
+		int numValues =  days.length;
 		List<AxisValue> axisValues = new ArrayList< >();
 		List<PointValue> values = new ArrayList< >();
 		for (int i = 0; i < numValues; ++i) {
@@ -160,36 +105,34 @@ public class MainActivity extends AppCompatActivity {
 		}
 		
 		Line line = new Line(values);
-		// line.setColor(ChartUtils.COLOR_GREEN).setCubic(true);
 		line.setColor(ChartUtils.COLOR_VIOLET);
 		line.setShape(shape);
-		// line.setCubic(isCubic=true);//curve line
-		line.setFilled(isFilled=true);// area
+		line.setFilled(isFilled);// area
 		line.setHasLabels(hasLabels);
-		line.setHasLabelsOnlyForSelected(hasLabelForSelected=true);
+		line.setHasLabelsOnlyForSelected(hasLabelForSelected);
 		line.setHasLines(hasLines);
 		line.setHasPoints(hasPoints);
-		
+		line.setSelectedColor(ChartUtils.COLOR_BLUE);
+
 		List<Line> lines = new ArrayList<>();
 		lines.add(line);
 		
 		data = new LineChartData(lines);
-		data.setAxisXBottom(new Axis(axisValues).setHasLines(true));
-		data.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(3));
+		data.setAxisXBottom(new Axis(axisValues).setTextColor(ChartUtils.COLOR_RED).setLineColor(ChartUtils.COLOR_ORANGE).setSelectedColor(ChartUtils.COLOR_BLUE));
 		
 		chart.setLineChartData(data);
-		chart.setZoomType(ZoomType.HORIZONTAL);
+		chart.setZoomEnabled(false);
 
 	}
 	
 	int upper_bound =100;
 	
-	public final static String[] days = new String[]{"Mon", "Tue", "Wen", "Thu", "Fri", "Sat", "Sun",};
+
 	private class ValueTouchListener implements LineChartOnValueSelectListener {
 		
 		@Override
 		public void onValueSelected(int lineIndex, int pointIndex, PointValue value) {
-			Toast.makeText(MainActivity.this, "Selected: " + value, Toast.LENGTH_SHORT).show();
+			Toast.makeText(MainActivity.this, "lineIndex: "+lineIndex+"\npointIndex: "+pointIndex+"\nSelected: " + value, Toast.LENGTH_SHORT).show();
 		}
 		
 		@Override
