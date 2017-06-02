@@ -131,7 +131,7 @@ public abstract class AbstractChartRenderer implements ChartRenderer {
 
     @Override
     public void clearTouch() {
-        selectedValue.clear();
+        // selectedValue.clear();
     }
 
     @Override

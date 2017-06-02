@@ -152,7 +152,7 @@ public class LineChartRenderer extends AbstractChartRenderer {
 
     @Override
     public boolean checkTouch(float touchX, float touchY) {
-        selectedValue.clear();
+        // selectedValue.clear();
         final LineChartData data = dataProvider.getLineChartData();
         int lineIndex = 0;
         for (Line line : data.getLines()) {
