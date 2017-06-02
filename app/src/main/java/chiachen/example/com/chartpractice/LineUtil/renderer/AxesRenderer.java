@@ -42,8 +42,8 @@ public class AxesRenderer {
             '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
             '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};
 
-    private boolean flag = false;
-    private int selectedPosition;
+    private int mSelectedPosition = -1;
+    private Paint mSelectedPaint = new Paint();
     private Chart chart;
     private ChartComputator computator;
     private int axisMargin;
@@ -145,7 +145,7 @@ public class AxesRenderer {
         }
         initAxisAttributes(axis, position);
         initAxisMargin(axis, position);
-        initAxisMeasurements(axis, position);
+        initAxisMeasurements(axis, position);//for line
     }
 
     private void initAxisAttributes(Axis axis, int position) {
@@ -575,8 +575,7 @@ public class AxesRenderer {
     }
 
     public void setAxesSelected(int position) {
-        selectedPosition = position;
-        flag = true;
+        mSelectedPosition = position;
     }
 
     private void drawAxisLabelsAndName(Canvas canvas, Axis axis, int position) {
@@ -614,11 +613,10 @@ public class AxesRenderer {
                         labelPaintTab[position]);
                 canvas.restore();
             } else {
-                if (flag && valueToDrawIndex == selectedPosition) {
-                    flag = false;
-                    Paint paint = new Paint(labelPaintTab[position]);
-                    paint.setColor(axis.getSelectedColor());
-                    canvas.drawText(labelBuffer, labelBuffer.length - charsNumber, charsNumber, labelX, labelY, paint);
+                if (mSelectedPosition != -1 && valueToDrawIndex == mSelectedPosition) {
+                    mSelectedPaint.set(labelPaintTab[position]);
+                    mSelectedPaint.setColor(axis.getSelectedColor());
+                    canvas.drawText(labelBuffer, labelBuffer.length - charsNumber, charsNumber, labelX, labelY, mSelectedPaint);
                 } else {
                     canvas.drawText(labelBuffer, labelBuffer.length - charsNumber, charsNumber, labelX, labelY, labelPaintTab[position]);
                 }
