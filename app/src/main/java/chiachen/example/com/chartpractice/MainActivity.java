@@ -16,6 +16,7 @@ import chiachen.example.com.chartpractice.LineUtil.model.AxisValue;
 import chiachen.example.com.chartpractice.LineUtil.model.Line;
 import chiachen.example.com.chartpractice.LineUtil.model.LineChartData;
 import chiachen.example.com.chartpractice.LineUtil.model.PointValue;
+import chiachen.example.com.chartpractice.LineUtil.model.SelectedValue;
 import chiachen.example.com.chartpractice.LineUtil.model.ValueShape;
 import chiachen.example.com.chartpractice.LineUtil.model.Viewport;
 import chiachen.example.com.chartpractice.LineUtil.util.ChartUtils;
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
 		// Generate some random values.
 		generateValues();
 		generateData();
-		resetViewport();
 		
 		findViewById(R.id.btn_one_day).setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -74,16 +74,12 @@ public class MainActivity extends AppCompatActivity {
 		};
 	}
 
-	private int widthStart = 0;
-	private int widthEnd = 6;
-	private void resetViewport() {
-		// Reset viewport height range to (0,100)
+	private void resetViewport(LineChartData data) {
+		int length = data.getLines().get(0).getValues().size() - 1;
 		final Viewport v = new Viewport(0, upper_bound, days.length, 0);
+		final Viewport v1 = new Viewport(length - 5, upper_bound, length, 0);
 		chart.setMaximumViewport(v);
-		// chart.setCurrentViewport(v);
-		final Viewport v1 = new Viewport(widthStart, upper_bound, widthEnd, 0);
-		chart.setCurrentViewportWithAnimation(v1);
-		
+		chart.setCurrentViewport(v1);
 		chart.setValueSelectionEnabled(true);
 	}
 
@@ -119,10 +115,11 @@ public class MainActivity extends AppCompatActivity {
 		
 		data = new LineChartData(lines);
 		data.setAxisXBottom(new Axis(axisValues).setTextColor(ChartUtils.COLOR_RED).setLineColor(ChartUtils.COLOR_ORANGE).setSelectedColor(ChartUtils.COLOR_BLUE));
-		
 		chart.setLineChartData(data);
+		chart.getAxesRenderer().setAxesSelected(numValues - 1);
 		chart.setZoomEnabled(false);
 
+		resetViewport(data);
 	}
 	
 	int upper_bound =100;
