@@ -9,6 +9,8 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.text.TextUtils;
 
+import java.util.Arrays;
+
 import chiachen.example.com.chartpractice.LineUtil.computator.ChartComputator;
 import chiachen.example.com.chartpractice.LineUtil.model.Axis;
 import chiachen.example.com.chartpractice.LineUtil.model.AxisValue;
@@ -42,7 +44,7 @@ public class AxesRenderer {
             '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
             '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};
 
-    private int mSelectedPosition = -1;
+    private char mSelectedChart[][] = new char[4][];
     private Paint mSelectedPaint = new Paint();
     private Chart chart;
     private ChartComputator computator;
@@ -574,8 +576,24 @@ public class AxesRenderer {
         }
     }
 
-    public void setAxesSelected(int position) {
-        mSelectedPosition = position;
+    public void setAxesSelected(int selectedPosition) {
+        Axis axis = chart.getChartData().getAxisXBottom();
+        if (axis != null && axis.getValues().size() > selectedPosition) {
+            mSelectedChart[BOTTOM] = axis.getValues().get(selectedPosition).getLabelAsChars().clone();
+        }
+
+        axis = chart.getChartData().getAxisXTop();
+        if (axis != null && axis.getValues().size() > selectedPosition) {
+            mSelectedChart[TOP] = axis.getValues().get(selectedPosition).getLabelAsChars().clone();
+        }
+        axis = chart.getChartData().getAxisYLeft();
+        if (axis != null && axis.getValues().size() > selectedPosition) {
+            mSelectedChart[LEFT] = axis.getValues().get(selectedPosition).getLabelAsChars().clone();
+        }
+        axis = chart.getChartData().getAxisYRight();
+        if (axis != null && axis.getValues().size() > selectedPosition) {
+            mSelectedChart[RIGHT] = axis.getValues().get(selectedPosition).getLabelAsChars().clone();
+        }
     }
 
     private void drawAxisLabelsAndName(Canvas canvas, Axis axis, int position) {
@@ -613,7 +631,7 @@ public class AxesRenderer {
                         labelPaintTab[position]);
                 canvas.restore();
             } else {
-                if (mSelectedPosition != -1 && valueToDrawIndex == mSelectedPosition) {
+                if (Arrays.equals(mSelectedChart[position], valuesToDrawTab[position][valueToDrawIndex].getLabelAsChars())) {
                     mSelectedPaint.set(labelPaintTab[position]);
                     mSelectedPaint.setColor(axis.getSelectedColor());
                     canvas.drawText(labelBuffer, labelBuffer.length - charsNumber, charsNumber, labelX, labelY, mSelectedPaint);
