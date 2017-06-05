@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
 		chart.setLineChartData(data);
 		chart.getAxesRenderer().setAxesSelected(numValues - 1);
 		chart.setZoomEnabled(false);
+		chart.selectValue(new SelectedValue(lines.size() - 1, numValues - 1, SelectedValue.SelectedValueType.LINE));
 
 		resetViewport(data);
 	}
